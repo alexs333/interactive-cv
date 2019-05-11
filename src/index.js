@@ -20,20 +20,26 @@ const config = {
 
 const game = new Phaser.Game(config)
 let player
+let walkingSound
 
 function preload () {
-  this.load.image('background', 'assets/background.png')
-  this.load.multiatlas('character', 'assets/dude.json', 'assets')
+  this.load.image('background', 'assets/images/background.png')
+  this.load.multiatlas('character', 'assets/images/dude.json', 'assets/images')
+  this.load.audio('music', 'assets/sounds/background_music.mp3')
+  this.load.audio('walk', 'assets/sounds/walk.ogg')
 }
 
 function create () {
   this.cameras.main.setBounds(0, 0, 3200, 100)
   this.physics.world.setBounds(0, 0, 3200, 600)
   this.add.tileSprite(1600, 300, 0, 0, 'background')
+  this.sound.play('music', { loop: true })
 
   player = this.physics.add.sprite(0, 400, 'character', 'run/r_001.png')
   player.setBounce(0.3)
   player.setCollideWorldBounds(true)
+
+  walkingSound = this.sound.add('walk', { volume: 0.3 })
 
   this.cameras.main.startFollow(player, true, 0.08, 0.08)
 
@@ -55,6 +61,20 @@ function create () {
     frames: [{ key: 'character', frame: 'run/r_012.png' }],
     frameRate: 20
   })
+
+  this.footsteps = this.time.addEvent({
+    duration: 500,
+    repeat: -1,
+    callbackScope: this,
+    callback: function () {
+      if (player.isWalking) {
+        if (!walkingSound.isPlaying) {
+          console.log('sound...')
+          walkingSound.play()
+        }
+      }
+    }
+  })
 }
 
 function update () {
@@ -64,12 +84,15 @@ function update () {
     player.flipX = false
     player.setVelocityX(260)
     player.anims.play('right', true)
+    player.isWalking = true
   } else if (cursor.left.isDown) {
     player.flipX = true
     player.setVelocityX(-260)
     player.anims.play('right', true)
+    player.isWalking = true
   } else {
     player.setVelocityX(0)
     player.anims.play('stop')
+    player.isWalking = false
   }
 }
