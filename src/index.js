@@ -44,7 +44,7 @@ function create () {
   this.cameras.main.startFollow(player, true, 0.08, 0.08)
 
   this.anims.create({
-    key: 'right',
+    key: 'move',
     frames: this.anims.generateFrameNames('character', {
       start: 1,
       end: 42,
@@ -67,11 +67,8 @@ function create () {
     repeat: -1,
     callbackScope: this,
     callback: function () {
-      if (player.isWalking) {
-        if (!walkingSound.isPlaying) {
-          console.log('sound...')
-          walkingSound.play()
-        }
+      if (player.isWalking && !walkingSound.isPlaying) {
+        walkingSound.play()
       }
     }
   })
@@ -81,18 +78,23 @@ function update () {
   const cursor = this.input.keyboard.createCursorKeys()
 
   if (cursor.right.isDown) {
-    player.flipX = false
-    player.setVelocityX(260)
-    player.anims.play('right', true)
-    player.isWalking = true
+    move(player, 'right')
   } else if (cursor.left.isDown) {
-    player.flipX = true
-    player.setVelocityX(-260)
-    player.anims.play('right', true)
-    player.isWalking = true
+    move(player, 'left')
   } else {
-    player.setVelocityX(0)
-    player.anims.play('stop')
-    player.isWalking = false
+    stop(player)
   }
+}
+
+const move = (player, direction) => {
+  player.flipX = direction === 'left'
+  player.setVelocityX(direction === 'left' ? -260 : 260)
+  player.anims.play('move', true)
+  player.isWalking = true
+}
+
+const stop = player => {
+  player.setVelocityX(0)
+  player.anims.play('stop')
+  player.isWalking = false
 }
