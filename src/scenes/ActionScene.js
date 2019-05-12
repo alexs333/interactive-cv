@@ -7,13 +7,6 @@ export default class ActionScene extends Scene {
     this.walkingSound = null
   }
 
-  preload () {
-    this.load.image('background', 'assets/images/background.png')
-    this.load.multiatlas('character', 'assets/images/dude.json', 'assets/images')
-    this.load.audio('music', 'assets/sounds/background_music.mp3')
-    this.load.audio('walk', 'assets/sounds/walk.ogg')
-  }
-
   create () {
     this.cameras.main.setBounds(0, 0, 3200, 100)
     this.physics.world.setBounds(0, 0, 3200, 600)

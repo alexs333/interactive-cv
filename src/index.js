@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import ActionScene from './scenes/ActionScene'
+import LoadingScene from './scenes/LoadingScene'
 
 const config = {
   type: Phaser.AUTO,
@@ -12,7 +13,7 @@ const config = {
       debug: false
     }
   },
-  scene: [ ActionScene ]
+  scene: [ LoadingScene, ActionScene ]
 }
 
 const game = new Phaser.Game(config)
