@@ -46,7 +46,11 @@ export default class LoadingScene extends Scene {
       [ progressBar, progressBox, loadingText, percentText ].map(item => item.destroy())
     })
 
-    this.load.image('background', 'assets/images/background.png')
+    this.load.image('background1', 'assets/images/bg_layer1.png')
+    this.load.image('background2', 'assets/images/bg_layer2.png')
+    this.load.image('background3', 'assets/images/bg_layer3.png')
+    this.load.image('background4', 'assets/images/bg_layer4.png')
+    this.load.image('background5', 'assets/images/bg_layer5.png')
     this.load.image('ground', 'assets/images/tile_transparent.png')
     this.load.multiatlas('character', 'assets/images/dude.json', 'assets/images')
     this.load.audio('music', 'assets/sounds/background_music.mp3')

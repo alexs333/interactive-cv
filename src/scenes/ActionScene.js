@@ -10,7 +10,13 @@ export default class ActionScene extends Scene {
   create () {
     this.cameras.main.setBounds(0, 0, 3200, 100)
     this.physics.world.setBounds(0, 0, 3200, 600)
-    this.add.tileSprite(1600, 300, 0, 0, 'background')
+
+    Array(5).fill().forEach((_, i) => {
+      const backgroundName = `background${i + 1}`
+      this[backgroundName] = this.add.tileSprite(400, 300, 800, 600, backgroundName)
+      this[backgroundName].setScrollFactor(0, 0)
+    })
+
     this.sound.play('music', { loop: true })
 
     this.player = this.physics.add.sprite(0, 400, 'character', 'run/r_001.png')
@@ -59,6 +65,11 @@ export default class ActionScene extends Scene {
 
   update () {
     const cursor = this.input.keyboard.createCursorKeys()
+
+    this.background2.tilePositionX = this.cameras.main.scrollX * 0.1
+    this.background3.tilePositionX = this.cameras.main.scrollX * 0.4
+    this.background4.tilePositionX = this.cameras.main.scrollX * 0.5
+    this.background5.tilePositionX = this.cameras.main.scrollX * 0.8
 
     if (cursor.right.isDown) {
       this.move('right')
