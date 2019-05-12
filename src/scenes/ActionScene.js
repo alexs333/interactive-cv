@@ -1,4 +1,5 @@
-import { Scene } from 'phaser'
+import Phaser, { Scene } from 'phaser'
+import range from 'lodash/range'
 
 export default class ActionScene extends Scene {
   constructor () {
@@ -11,13 +12,14 @@ export default class ActionScene extends Scene {
     this.cameras.main.setBounds(0, 0, 3200, 100)
     this.physics.world.setBounds(0, 0, 3200, 600)
 
-    Array(5).fill().forEach((_, i) => {
-      const backgroundName = `background${i + 1}`
+    range(1, 6).forEach(i => {
+      const backgroundName = `background${i}`
       this[backgroundName] = this.add.tileSprite(400, 300, 800, 600, backgroundName)
       this[backgroundName].setScrollFactor(0, 0)
     })
 
-    this.sound.play('music', { loop: true })
+    const trackNo = Phaser.Math.Between(1, 3)
+    this.sound.play(`music${trackNo}`, { loop: true })
 
     this.player = this.physics.add.sprite(0, 400, 'character', 'run/r_001.png')
     this.player.setBounce(0.3)
