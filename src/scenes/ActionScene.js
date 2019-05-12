@@ -17,6 +17,11 @@ export default class ActionScene extends Scene {
     this.player.setBounce(0.3)
     this.player.setCollideWorldBounds(true)
 
+    const ground = this.physics.add.staticGroup()
+    const groundSprite = this.add.tileSprite(0, 590, (2 * 3200), 20, 'ground')
+    ground.add(groundSprite)
+    this.physics.add.collider(this.player, ground)
+
     this.walkingSound = this.sound.add('walk', { volume: 0.3 })
 
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08)
@@ -62,6 +67,10 @@ export default class ActionScene extends Scene {
     } else {
       this.stop(this.player)
     }
+
+    if (cursor.up.isDown && this.player.body.touching.down) {
+      this.jump()
+    }
   }
 
   move (direction) {
@@ -75,5 +84,10 @@ export default class ActionScene extends Scene {
     this.player.setVelocityX(0)
     this.player.anims.play('stop')
     this.player.isWalking = false
+  }
+
+  jump () {
+    this.player.setVelocityY(-300)
+    this.sound.play('jump')
   }
 }

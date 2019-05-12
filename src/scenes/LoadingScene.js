@@ -47,9 +47,11 @@ export default class LoadingScene extends Scene {
     })
 
     this.load.image('background', 'assets/images/background.png')
+    this.load.image('ground', 'assets/images/tile_transparent.png')
     this.load.multiatlas('character', 'assets/images/dude.json', 'assets/images')
     this.load.audio('music', 'assets/sounds/background_music.mp3')
     this.load.audio('walk', 'assets/sounds/walk.ogg')
+    this.load.audio('jump', 'assets/sounds/jump.ogg')
   }
 
   create () {
