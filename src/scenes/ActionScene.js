@@ -1,6 +1,8 @@
 import Phaser, { Scene } from 'phaser'
 import range from 'lodash/range'
 
+import Player from '../sprites/Player'
+
 export default class ActionScene extends Scene {
   constructor () {
     super({ key: 'ActionScene' })
@@ -21,48 +23,19 @@ export default class ActionScene extends Scene {
     const trackNo = Phaser.Math.Between(1, 3)
     this.sound.play(`music${trackNo}`, { loop: true })
 
-    this.player = this.physics.add.sprite(0, 400, 'character', 'run/r_001.png')
-    this.player.setBounce(0.3)
-    this.player.setCollideWorldBounds(true)
+    this.player = new Player({
+      scene: this,
+      key: 'character',
+      x: 0,
+      y: 400
+    })
 
     const ground = this.physics.add.staticGroup()
     const groundSprite = this.add.tileSprite(0, 590, (2 * 3200), 20, 'ground')
     ground.add(groundSprite)
     this.physics.add.collider(this.player, ground)
 
-    this.walkingSound = this.sound.add('walk', { volume: 0.3 })
-
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08)
-
-    this.anims.create({
-      key: 'move',
-      frames: this.anims.generateFrameNames('character', {
-        start: 1,
-        end: 42,
-        zeroPad: 3,
-        prefix: 'run/r_',
-        suffix: '.png'
-      }),
-      frameRate: 25,
-      repeat: -1
-    })
-
-    this.anims.create({
-      key: 'stop',
-      frames: [{ key: 'character', frame: 'run/r_012.png' }],
-      frameRate: 20
-    })
-
-    this.footsteps = this.time.addEvent({
-      duration: 500,
-      repeat: -1,
-      callbackScope: this,
-      callback: function () {
-        if (this.player.isWalking && !this.walkingSound.isPlaying) {
-          this.walkingSound.play()
-        }
-      }
-    })
   }
 
   update () {
@@ -74,33 +47,15 @@ export default class ActionScene extends Scene {
     this.background5.tilePositionX = this.cameras.main.scrollX * 0.8
 
     if (cursor.right.isDown) {
-      this.move('right')
+      this.player.move('right')
     } else if (cursor.left.isDown) {
-      this.move('left')
+      this.player.move('left')
     } else {
-      this.stop(this.player)
+      this.player.stop()
     }
 
-    if (cursor.up.isDown && this.player.body.touching.down) {
-      this.jump()
+    if (cursor.up.isDown && this.player.isTouchingDown()) {
+      this.player.jump()
     }
-  }
-
-  move (direction) {
-    this.player.flipX = direction === 'left'
-    this.player.setVelocityX(direction === 'left' ? -260 : 260)
-    this.player.anims.play('move', true)
-    this.player.isWalking = true
-  }
-
-  stop () {
-    this.player.setVelocityX(0)
-    this.player.anims.play('stop')
-    this.player.isWalking = false
-  }
-
-  jump () {
-    this.player.setVelocityY(-300)
-    this.sound.play('jump')
   }
 }
