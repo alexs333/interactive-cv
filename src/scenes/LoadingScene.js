@@ -1,6 +1,8 @@
 import { Scene } from 'phaser'
 import range from 'lodash/range'
 
+import config from '../experiences.json'
+
 export default class LoadingScene extends Scene {
   constructor () {
     super({ key: 'LoadingScene' })
@@ -53,10 +55,17 @@ export default class LoadingScene extends Scene {
     const loadBgMusic = i => this.load.audio(`music${i}`, `assets/sounds/background_music${i}.mp3`)
     range(1, 4).forEach(loadBgMusic, this)
 
+    const loadLogos = logoName => this.load.image(logoName, `assets/images/logos/${logoName}.png`)
+    config.experiences.map(exp => exp.logo).forEach(loadLogos, this)
+
     this.load.image('ground', 'assets/images/tile_transparent.png')
+    this.load.image('ufo', 'assets/images/spaceship.png')
+    this.load.image('flag', 'assets/images/flag.png')
     this.load.multiatlas('character', 'assets/images/dude.json', 'assets/images')
     this.load.audio('walk', 'assets/sounds/walk.ogg')
     this.load.audio('jump', 'assets/sounds/jump.ogg')
+    this.load.audio('touchSuccess', 'assets/sounds/touch_success.mp3')
+    this.load.audio('touchEmpty', 'assets/sounds/touch_empty.ogg')
   }
 
   create () {

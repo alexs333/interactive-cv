@@ -1,18 +1,24 @@
 import Phaser, { Scene } from 'phaser'
 import range from 'lodash/range'
 
+import config from '../experiences.json'
 import Player from '../sprites/Player'
+import SpaceShip from '../sprites/SpaceShip'
 
 export default class ActionScene extends Scene {
   constructor () {
     super({ key: 'ActionScene' })
     this.player = null
     this.walkingSound = null
+    this.noOfExperiences = config.experiences.length
   }
 
   create () {
-    this.cameras.main.setBounds(0, 0, 3200, 100)
-    this.physics.world.setBounds(0, 0, 3200, 600)
+    const gap = 900
+    const gameWidth = this.noOfExperiences * gap + gap
+
+    this.cameras.main.setBounds(0, 0, gameWidth, 100)
+    this.physics.world.setBounds(0, 0, gameWidth, 600)
 
     range(1, 6).forEach(i => {
       const backgroundName = `background${i}`
@@ -20,8 +26,22 @@ export default class ActionScene extends Scene {
       this[backgroundName].setScrollFactor(0, 0)
     })
 
+    for (const [i, exp] of config.experiences.entries()) {
+      const experienceName = `experience${i}`
+      const ufo = this.add.image(0, 0, 'ufo')
+      const flag = this.add.image(165, -120, 'flag')
+      const logo = this.add.image(flag.width, -135, exp.logo)
+
+      this[experienceName] = new SpaceShip({
+        scene: this,
+        x: gap * i + gap,
+        y: 285,
+        children: [ ufo, flag, logo ]
+      })
+    }
+
     const trackNo = Phaser.Math.Between(1, 3)
-    this.sound.play(`music${trackNo}`, { loop: true })
+    this.sound.play(`music${trackNo}`, { loop: true, volume: 0.8 })
 
     this.player = new Player({
       scene: this,
@@ -30,8 +50,13 @@ export default class ActionScene extends Scene {
       y: 400
     })
 
+    range(0, this.noOfExperiences).forEach(i => {
+      const experienceName = `experience${i}`
+      this.physics.add.collider(this.player, this[experienceName], this[experienceName].touch, null, this)
+    })
+
     const ground = this.physics.add.staticGroup()
-    const groundSprite = this.add.tileSprite(0, 590, (2 * 3200), 20, 'ground')
+    const groundSprite = this.add.tileSprite(0, 590, (2 * gameWidth), 20, 'ground')
     ground.add(groundSprite)
     this.physics.add.collider(this.player, ground)
 
