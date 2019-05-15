@@ -36,7 +36,8 @@ export default class ActionScene extends Scene {
         scene: this,
         x: gap * i + gap,
         y: 285,
-        children: [ ufo, flag, logo ]
+        children: [ ufo, flag, logo ],
+        skills: exp.skills
       })
     }
 

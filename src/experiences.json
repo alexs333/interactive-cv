@@ -1,13 +1,30 @@
 {
   "experiences": [
     { 
-      "logo": "swinburne"
+      "logo": "swinburne",
+      "skills": [
+        "Bachelor of Telecommunications Engineering",
+        "Bachelor of Computer Science and Software Engineering"
+      ]
     },
     {
-      "logo": "rea"
+      "logo": "rea",
+      "skills": [
+        "ruby",
+        "React.js",
+        "Ruby on Rails",
+        "Buildkite",
+        "Enteriprise startup"
+      ]
     },
     {
-      "logo": "iress"
+      "logo": "iress",
+      "skills": [
+        "Kotlin",
+        "Abstract syntax tree",
+        "Spring Boot",
+        "Terraform"
+      ]
     }
   ]
 }

@@ -6,11 +6,12 @@ const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
+  parent: 'cv',
   physics: {
     default: 'arcade',
     arcade: {
       gravity: { y: 500 },
-      debug: true
+      debug: false
     }
   },
   scene: [ LoadingScene, ActionScene ]
