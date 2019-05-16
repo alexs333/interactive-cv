@@ -19,7 +19,7 @@ export default class Player extends GameObjects.Sprite {
         start: 1,
         end: 42,
         zeroPad: 3,
-        prefix: 'run/r_',
+        prefix: 'r_',
         suffix: '.png'
       }),
       frameRate: 25,
@@ -27,8 +27,21 @@ export default class Player extends GameObjects.Sprite {
     })
 
     this.scene.anims.create({
+      key: 'jump',
+      frames: this.scene.anims.generateFrameNames('character', {
+        start: 1,
+        end: 23,
+        zeroPad: 3,
+        prefix: 'j_',
+        suffix: '.png'
+      }),
+      frameRate: 50,
+      repeat: -1
+    })
+
+    this.scene.anims.create({
       key: 'stop',
-      frames: [{ key: 'character', frame: 'run/r_012.png' }],
+      frames: [{ key: 'character', frame: 'r_012.png' }],
       frameRate: 20
     })
 
@@ -51,18 +64,19 @@ export default class Player extends GameObjects.Sprite {
   move (direction) {
     this.flipX = direction === 'left'
     this.body.setVelocityX(direction === 'left' ? -260 : 260)
-    this.anims.play('move', true)
+    if (this.isTouchingDown()) this.anims.play('move', true)
     this.isWalking = true
   }
 
   stop () {
     this.body.setVelocityX(0)
-    this.anims.play('stop')
+    if (this.isTouchingDown()) this.anims.play('stop', true)
     this.isWalking = false
   }
 
   jump () {
     this.body.setVelocityY(-300)
+    this.anims.play('jump', true)
     this.scene.sound.play('jump')
   }
 }
