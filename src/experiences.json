@@ -8,13 +8,45 @@
       ]
     },
     {
+      "logo": "swann",
+      "skills": [
+        "ruby",
+        "angular.js",
+        "CoffeeScript",
+        "SOA",
+        "AWS",
+        "Postgress"
+      ]
+    },
+    {
+      "logo": "ioof",
+      "skills": [
+        "groovy",
+        "react.js",
+        "angular.js",
+        "Docker",
+        "MongoDB"
+      ]
+    },
+    {
+      "logo": "rosterright",
+      "skills": [
+        "ruby",
+        "Ruby on Rails",
+        "React.js",
+        "RxJS",
+        "Startup"
+      ]
+    },
+    {
       "logo": "rea",
       "skills": [
         "ruby",
         "React.js",
         "Ruby on Rails",
         "Buildkite",
-        "Enteriprise startup"
+        "Enteriprise startup",
+        "Microservices"
       ]
     },
     {
