@@ -22,6 +22,7 @@ export default class SpaceShip extends GameObjects.Container {
 
   touch () {
     if (!this.touchable) return
+    this._shake()
     if (this.skills.length > 0) {
       this._launchSkill()
       this.scene.sound.play('touchSuccess', { volume: 2 })
@@ -31,6 +32,12 @@ export default class SpaceShip extends GameObjects.Container {
 
     this.touchable = false
     this.scene.time.delayedCall(700, function () { this.touchable = true }, null, this)
+  }
+
+  _shake () {
+    this.body.setVelocityY(-100)
+    this.scene.time.delayedCall(200, function () { this.body.setVelocityY(100) }, null, this)
+    this.scene.time.delayedCall(400, function () { this.body.setVelocityY(0) }, null, this)
   }
 
   _launchSkill () {
