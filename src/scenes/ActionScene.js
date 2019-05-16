@@ -2,8 +2,8 @@ import Phaser, { Scene } from 'phaser'
 import range from 'lodash/range'
 
 import config from '../experiences.json'
-import Player from '../sprites/Player'
-import SpaceShip from '../sprites/SpaceShip'
+import Player from '../entities/Player'
+import SpaceShip from '../entities/SpaceShip'
 
 export default class ActionScene extends Scene {
   constructor () {
@@ -20,26 +20,8 @@ export default class ActionScene extends Scene {
     this.cameras.main.setBounds(0, 0, gameWidth, 100)
     this.physics.world.setBounds(0, 0, gameWidth, 600)
 
-    range(1, 6).forEach(i => {
-      const backgroundName = `background${i}`
-      this[backgroundName] = this.add.tileSprite(400, 300, 800, 600, backgroundName)
-      this[backgroundName].setScrollFactor(0, 0)
-    })
-
-    for (const [i, exp] of config.experiences.entries()) {
-      const experienceName = `experience${i}`
-      const ufo = this.add.image(0, 0, 'ufo')
-      const flag = this.add.image(165, -120, 'flag')
-      const logo = this.add.image(flag.width, -135, exp.logo)
-
-      this[experienceName] = new SpaceShip({
-        scene: this,
-        x: gap * i + gap,
-        y: 285,
-        children: [ ufo, flag, logo ],
-        skills: exp.skills
-      })
-    }
+    this._addBackgroundLayers()
+    this._addExperienceSpaceShips(gap)
 
     const trackNo = Phaser.Math.Between(1, 3)
     this.sound.play(`music${trackNo}`, { loop: true, volume: 0.8 })
@@ -56,22 +38,15 @@ export default class ActionScene extends Scene {
       this.physics.add.collider(this.player, this[experienceName], this[experienceName].touch, null, this)
     })
 
-    const ground = this.physics.add.staticGroup()
-    const groundSprite = this.add.tileSprite(0, 590, (2 * gameWidth), 20, 'ground')
-    ground.add(groundSprite)
-    this.physics.add.collider(this.player, ground)
+    this.physics.add.collider(this.player, this._createGround(gameWidth))
 
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08)
   }
 
   update () {
+    this._scrollBackground()
+
     const cursor = this.input.keyboard.createCursorKeys()
-
-    this.background2.tilePositionX = this.cameras.main.scrollX * 0.1
-    this.background3.tilePositionX = this.cameras.main.scrollX * 0.4
-    this.background4.tilePositionX = this.cameras.main.scrollX * 0.5
-    this.background5.tilePositionX = this.cameras.main.scrollX * 0.8
-
     if (cursor.right.isDown) {
       this.player.move('right')
     } else if (cursor.left.isDown) {
@@ -82,6 +57,46 @@ export default class ActionScene extends Scene {
 
     if (cursor.up.isDown && this.player.isTouchingDown()) {
       this.player.jump()
+    }
+  }
+
+  _createGround (gameWidth) {
+    const ground = this.physics.add.staticGroup()
+    const groundSprite = this.add.tileSprite(0, 590, (2 * gameWidth), 20, 'ground')
+    ground.add(groundSprite)
+
+    return ground
+  }
+
+  _addBackgroundLayers () {
+    range(1, 6).forEach(i => {
+      const backgroundName = `background${i}`
+      this[backgroundName] = this.add.tileSprite(400, 300, 800, 600, backgroundName)
+      this[backgroundName].setScrollFactor(0, 0)
+    })
+  }
+
+  _scrollBackground () {
+    this.background2.tilePositionX = this.cameras.main.scrollX * 0.1
+    this.background3.tilePositionX = this.cameras.main.scrollX * 0.4
+    this.background4.tilePositionX = this.cameras.main.scrollX * 0.5
+    this.background5.tilePositionX = this.cameras.main.scrollX * 0.8
+  }
+
+  _addExperienceSpaceShips (gap) {
+    for (const [i, exp] of config.experiences.entries()) {
+      const experienceName = `experience${i}`
+      const ufo = this.add.image(0, 0, 'ufo')
+      const flag = this.add.image(165, -120, 'flag')
+      const logo = this.add.image(flag.width, -135, exp.logo)
+
+      this[experienceName] = new SpaceShip({
+        scene: this,
+        x: gap * i + gap,
+        y: 285,
+        children: [ ufo, flag, logo ],
+        skills: exp.skills
+      })
     }
   }
 }
