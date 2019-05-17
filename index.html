@@ -5,23 +5,42 @@
     <title>Alex Serdyuk - Interactive CV</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css" />
     <style>
-      body {
-        padding-top: 3rem;
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      .box {
         display: flex;
-        justify-content: center;
+        flex-flow: column;
+        height: 100%;
+      }
+
+      .box .row.header {
+        flex: 0 1 auto;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+
+      .box .row.content {
+        flex: 1 1 auto;
       }
     </style>
   </head>
   <body>
-    <div>
-      <h3 class="title">Alex Serdyuk - Interactive Profile</h3>
+    <div class="box">
+      <div class="row header">
+          <h4 class="title is-4">Alex Serdyuk - Software Developer</h4>
 
-      <div class="box">
-        User <em>cursor</em> to move the player.  Spaceship represtnt
-        the organization of work or study.  Jump and touch the Spaceship
-        in order to retrieve the experience.
+          <div class="notification is-primary">
+            User <strong>cursor keys</strong> to move the player.  Spaceship represtnt
+            the organization of work or study.  Jump and touch the Spaceship
+            in order to retrieve the experience. And don't forget to turn
+            the <strong>sound</strong> on!
+          </div>
       </div>
-      <div id="cv"></div>
+
+      <div id="cv" class="row content"></div>
     </div>
   <script type="text/javascript" src="bundle.min.js"></script></body>
 </html>
