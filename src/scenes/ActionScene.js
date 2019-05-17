@@ -11,6 +11,7 @@ export default class ActionScene extends Scene {
     this.player = null
     this.walkingSound = null
     this.noOfExperiences = config.experiences.length
+    this.skillsTotal = config.experiences.reduce((carry, exp) => carry + exp.skills.length, 0)
   }
 
   create () {
@@ -21,7 +22,8 @@ export default class ActionScene extends Scene {
     this.physics.world.setBounds(0, 0, gameWidth, 600)
 
     this._addBackgroundLayers()
-    this._addExperienceSpaceShips(gap)
+    const completedPercentageText = this._addPercentageText()
+    const experiences = this._addExperienceSpaceShips(gap)
 
     const trackNo = Phaser.Math.Between(1, 3)
     this.sound.play(`music${trackNo}`, { loop: true, volume: 0.8 })
@@ -35,7 +37,16 @@ export default class ActionScene extends Scene {
 
     range(0, this.noOfExperiences).forEach(i => {
       const experienceName = `experience${i}`
-      this.physics.add.collider(this.player, this[experienceName], this[experienceName].touch, null, this)
+      this.physics.add.collider(
+        this.player,
+        this[experienceName],
+        () => {
+          this[experienceName].touch()
+          this._updatePercentageText(experiences, completedPercentageText)
+        },
+        null,
+        this
+      )
     })
 
     this.physics.add.collider(this.player, this._createGround(gameWidth))
@@ -76,6 +87,18 @@ export default class ActionScene extends Scene {
     })
   }
 
+  _addPercentageText () {
+    const completed = this.add.text(15, 15, 'Completed: 0%')
+    completed.setScrollFactor(0)
+    return completed
+  }
+
+  _updatePercentageText (experiences, text) {
+    const skillsRemaining = experiences.reduce((carry, exp) => carry + exp.skills.length, 0)
+    const completedPercentage = Math.ceil(100 - skillsRemaining / this.skillsTotal * 100)
+    text.setText(`Completed: ${completedPercentage}%`)
+  }
+
   _scrollBackground () {
     this.background2.tilePositionX = this.cameras.main.scrollX * 0.1
     this.background3.tilePositionX = this.cameras.main.scrollX * 0.4
@@ -84,6 +107,7 @@ export default class ActionScene extends Scene {
   }
 
   _addExperienceSpaceShips (gap) {
+    const experiences = []
     for (const [i, exp] of config.experiences.entries()) {
       const experienceName = `experience${i}`
       const ufo = this.add.image(0, 0, 'ufo')
@@ -97,6 +121,10 @@ export default class ActionScene extends Scene {
         children: [ ufo, flag, logo ],
         skills: exp.skills
       })
+
+      experiences.push(this[experienceName])
     }
+
+    return experiences
   }
 }
