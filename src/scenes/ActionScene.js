@@ -48,7 +48,7 @@ export default class ActionScene extends Scene {
           this[experienceName].touch()
           const skillsRemaining = experiences.reduce(conuntSkills, 0)
           this._updatePercentageText(skillsRemaining, completedPercentageText)
-          if (skillsRemaining < 30) this._finishGame(backgroundMusic)
+          if (skillsRemaining === 0) this._finishGame(backgroundMusic)
         },
         null,
         this
