@@ -48,7 +48,7 @@ export default class ActionScene extends Scene {
           this[experienceName].touch()
           const skillsRemaining = experiences.reduce(conuntSkills, 0)
           this._updatePercentageText(skillsRemaining, completedPercentageText)
-          if (skillsRemaining === 0) this._finishGame(backgroundMusic)
+          if (skillsRemaining < 30) this._finishGame(backgroundMusic)
         },
         null,
         this
@@ -77,8 +77,11 @@ export default class ActionScene extends Scene {
   }
 
   _finishGame (music) {
-    music.stop()
-    this.scene.start('GameOverScene')
+    this.cameras.main.fadeOut()
+    this.cameras.main.on('camerafadeoutcomplete', () => {
+      music.stop()
+      this.scene.start('GameOverScene')
+    })
   }
 
   _createGround (gameWidth) {
