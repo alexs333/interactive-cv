@@ -5,6 +5,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import config from '../experiences.json'
 import Player from '../entities/Player'
 import SpaceShip from '../entities/SpaceShip'
+import PercentageCompleted from '../entities/PercentageCompleted'
 
 const conuntSkills = (carry, exp) => carry + exp.skills.length
 
@@ -25,7 +26,7 @@ export default class ActionScene extends Scene {
     this.physics.world.setBounds(0, 0, gameWidth, 600)
 
     this._addBackgroundLayers()
-    const completedPercentageText = this._addPercentageText()
+    const completedPercentageText = new PercentageCompleted({ scene: this, x: 15, y: 15 })
     const experiences = this._addExperienceSpaceShips(gap)
 
     const trackNo = Phaser.Math.Between(1, 3)
@@ -100,15 +101,9 @@ export default class ActionScene extends Scene {
     })
   }
 
-  _addPercentageText () {
-    const completed = this.add.text(15, 15, 'Completed: 0%')
-    completed.setScrollFactor(0)
-    return completed
-  }
-
   _updatePercentageText (skillsRemaining, text) {
     const completedPercentage = Math.ceil(100 - skillsRemaining / this.skillsTotal * 100)
-    text.setText(`Completed: ${completedPercentage}%`)
+    text.setPercentage(completedPercentage)
   }
 
   _scrollBackground () {
