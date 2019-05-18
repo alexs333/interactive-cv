@@ -1,9 +1,12 @@
 import Phaser, { Scene } from 'phaser'
 import range from 'lodash/range'
+import cloneDeep from 'lodash/cloneDeep'
 
 import config from '../experiences.json'
 import Player from '../entities/Player'
 import SpaceShip from '../entities/SpaceShip'
+
+const conuntSkills = (carry, exp) => carry + exp.skills.length
 
 export default class ActionScene extends Scene {
   constructor () {
@@ -11,7 +14,7 @@ export default class ActionScene extends Scene {
     this.player = null
     this.walkingSound = null
     this.noOfExperiences = config.experiences.length
-    this.skillsTotal = config.experiences.reduce((carry, exp) => carry + exp.skills.length, 0)
+    this.skillsTotal = config.experiences.reduce(conuntSkills, 0)
   }
 
   create () {
@@ -26,7 +29,8 @@ export default class ActionScene extends Scene {
     const experiences = this._addExperienceSpaceShips(gap)
 
     const trackNo = Phaser.Math.Between(1, 3)
-    this.sound.play(`music${trackNo}`, { loop: true, volume: 0.8 })
+    const backgroundMusic = this.sound.add(`music${trackNo}`, { loop: true, volume: 0.6 })
+    backgroundMusic.play()
 
     this.player = new Player({
       scene: this,
@@ -42,7 +46,9 @@ export default class ActionScene extends Scene {
         this[experienceName],
         () => {
           this[experienceName].touch()
-          this._updatePercentageText(experiences, completedPercentageText)
+          const skillsRemaining = experiences.reduce(conuntSkills, 0)
+          this._updatePercentageText(skillsRemaining, completedPercentageText)
+          if (skillsRemaining === 0) this._finishGame(backgroundMusic)
         },
         null,
         this
@@ -50,7 +56,6 @@ export default class ActionScene extends Scene {
     })
 
     this.physics.add.collider(this.player, this._createGround(gameWidth))
-
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08)
   }
 
@@ -69,6 +74,11 @@ export default class ActionScene extends Scene {
     if (cursor.up.isDown && this.player.isTouchingDown()) {
       this.player.jump()
     }
+  }
+
+  _finishGame (music) {
+    music.stop()
+    this.scene.start('GameOverScene')
   }
 
   _createGround (gameWidth) {
@@ -93,8 +103,7 @@ export default class ActionScene extends Scene {
     return completed
   }
 
-  _updatePercentageText (experiences, text) {
-    const skillsRemaining = experiences.reduce((carry, exp) => carry + exp.skills.length, 0)
+  _updatePercentageText (skillsRemaining, text) {
     const completedPercentage = Math.ceil(100 - skillsRemaining / this.skillsTotal * 100)
     text.setText(`Completed: ${completedPercentage}%`)
   }
@@ -107,8 +116,9 @@ export default class ActionScene extends Scene {
   }
 
   _addExperienceSpaceShips (gap) {
+    const experienceConfig = cloneDeep(config.experiences)
     const experiences = []
-    for (const [i, exp] of config.experiences.entries()) {
+    for (const [i, exp] of experienceConfig.entries()) {
       const experienceName = `experience${i}`
       const ufo = this.add.image(0, 0, 'ufo')
       const flag = this.add.image(165, -120, 'flag')

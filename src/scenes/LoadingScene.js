@@ -66,6 +66,7 @@ export default class LoadingScene extends Scene {
     this.load.audio('jump', 'assets/sounds/jump.ogg')
     this.load.audio('touchSuccess', 'assets/sounds/touch_success.mp3')
     this.load.audio('touchEmpty', 'assets/sounds/touch_empty.ogg')
+    this.load.audio('gameover', 'assets/sounds/game_over.ogg')
   }
 
   create () {
