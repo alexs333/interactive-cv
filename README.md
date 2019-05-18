@@ -19,3 +19,6 @@ game engine.  The Project is build with [Phaser 3 Webpack Project Template] (htt
 ## Gameplay
 User cursor to controll the player.  Jump and touch past experiences (represented as space ships)
 in order to retrieve particular skillsets that were obtained throught the engagement.
+
+## Demo
+This interactive CV can be viewed [here](https://alexs333.github.io/interactive-cv/).
