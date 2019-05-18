@@ -26,6 +26,7 @@ export default class SpaceShip extends GameObjects.Container {
     if (this.skills.length > 0) {
       this._launchSkill()
       this.scene.sound.play('touchSuccess', { volume: 2 })
+      if (this.skills.length === 0) this.setAlpha(0.7)
     } else {
       this.scene.sound.play('touchEmpty')
     }
