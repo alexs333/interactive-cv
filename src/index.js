@@ -22,4 +22,5 @@ const config = {
   scene: [ LoadingScene, ActionScene, GameOverScene ]
 }
 
+screen.orientation.lock('landscape')
 const game = new Phaser.Game(config)
