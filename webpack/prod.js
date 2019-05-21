@@ -27,7 +27,8 @@ module.exports = merge(base, {
   },
   plugins: [
     new CopyPlugin([
-      { from: 'assets', to: 'assets' }
+      { from: 'assets', to: 'assets' },
+      { from: 'manifest.json', to: 'manifest.json' }
     ])
   ]
 });
