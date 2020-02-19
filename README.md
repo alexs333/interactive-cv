@@ -22,3 +22,6 @@ in order to retrieve particular skillsets that were obtained throught the engage
 
 ## Demo
 This interactive CV can be viewed [here](https://alexs333.github.io/interactive-cv/).
+
+## Deployment
+Refer to [the guide](https://medium.com/linagora-engineering/deploying-your-js-app-to-github-pages-the-easy-way-or-not-1ef8c48424b7) on how to deploy to GitHub pages.
