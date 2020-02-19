@@ -57,6 +57,25 @@
         "Spring Boot",
         "Terraform"
       ]
+    },
+    {
+      "logo": "judo",
+      "skills": [
+        "Lambda",
+        "NodeJS",
+        "CloudFormation",
+        "Serverless"
+      ]
+    },
+    {
+      "logo": "airwallex",
+      "skills": [
+        "Apolo Server/Client",
+        "Kotlin",
+        "GraphQL",
+        "TypeScript",
+        "Microfrontends"
+      ]
     }
   ]
 }
